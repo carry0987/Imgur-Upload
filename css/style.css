@@ -1,0 +1,82 @@
+@charset "UTF-8";
+
+/* Imgur Upload Style */
+
+body.loading .loading-modal {
+    display: block
+}
+
+.title {
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+.dropzone {
+    border: 4px dashed #ccc;
+    height: 200px;
+    position: relative;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 50%;
+}
+
+.info {
+    margin-top: 11%;
+}
+
+.dropzone p {
+    /*height: 100%;*/
+    /*line-height: 200px;*/
+    margin: 0%;
+    text-align: center;
+    width: 100%
+}
+
+.input {
+    height: 100%;
+    left: 0;
+    outline: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 100%
+}
+
+.status {
+    border-radius: 5px;
+    text-align: center;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.image-url {
+    width: 50%;
+}
+
+.dropzone.dropzone-dragging {
+    border-color: #000
+}
+
+.loading-modal {
+    background-color: rgba(255, 255, 255, .8);
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%
+}
+
+.loading-table {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15%;
+    margin-bottom: 15%;
+}
+
+.img {
+    width: 100%;
+}
