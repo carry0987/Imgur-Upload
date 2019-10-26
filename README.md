@@ -14,7 +14,7 @@ new Imgur({
 [Demo](https://carry0987.github.io/Imgur-Upload/)
 
 ## Good use of this project
-[Chrome Image Share](https://github.com/superj80820/chrome-image-share)  
+- [Chrome Image Share](https://github.com/superj80820/chrome-image-share)  
 
 ## Download
 [Link](https://github.com/carry0987/Imgur-Upload/releases/)
