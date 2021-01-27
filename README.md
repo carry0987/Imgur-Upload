@@ -15,6 +15,3 @@ new Imgur({
 
 ## Good use of this project
 - [Chrome Image Share](https://github.com/superj80820/chrome-image-share)  
-
-## Download
-[Link](https://github.com/carry0987/Imgur-Upload/releases/)
