@@ -12,6 +12,15 @@ body.loading .loading-modal {
     text-align: center;
 }
 
+.title h1 {
+    color: #000;
+    text-decoration: underline;
+}
+
+.title h1:hover {
+    color: #3588DE;
+}
+
 .dropzone {
     border: 4px dashed #ccc;
     height: 200px;
