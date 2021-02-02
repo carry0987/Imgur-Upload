@@ -28,7 +28,7 @@
         this.callback = options.callback || undefined;
         this.dropzone = document.querySelectorAll('.dropzone');
         this.info = document.querySelectorAll('.info');
-
+        //Start
         this.run();
     };
 
