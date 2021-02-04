@@ -104,7 +104,7 @@
 
             this.insertAfter(el, div);
         },
-        matchFiles: function (file, zone) {
+        matchFiles: function (file, zone, fileCount) {
             var status = zone.nextSibling;
 
             if (file.type.match(/image/) && file.type !== 'image/svg+xml') {
@@ -116,7 +116,9 @@
                 fd.append('image', file);
 
                 this.post(this.endpoint, fd, function (data) {
-                    document.body.classList.remove('loading');
+                    if (fileCount[0]+1 == fileCount[1]) {
+                        document.body.classList.remove('loading');
+                    }
                     typeof this.callback === 'function' && this.callback.call(this, data);
                 }.bind(this));
             } else {
@@ -135,7 +137,7 @@
 
                     for (i = 0, len = target.length; i < len; i += 1) {
                         file = target[i];
-                        this.matchFiles(file, zone);
+                        this.matchFiles(file, zone, [i, target.length]);
                     }
                 }
             }.bind(this), false);
