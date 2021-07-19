@@ -10,6 +10,9 @@ new Imgur({
 });
 ```
 
+## Register Client ID
+[Imgur](https://api.imgur.com/oauth2/addclient)
+
 ## Demo
 [Demo](https://carry0987.github.io/Imgur-Upload/)
 
