@@ -1,6 +1,6 @@
 /* Imgur Upload Script */
-(function (root, factory) {
-    "use strict";
+(function(root, factory) {
+    'use strict';
     if (typeof define === 'function' && define.amd) {
         define([], factory);
     } else if (typeof exports === 'object') {
@@ -8,9 +8,9 @@
     } else {
         root.Imgur = factory();
     }
-}(this, function () {
-    "use strict";
-    let Imgur = function (options) {
+}(this, function() {
+    'use strict';
+    let Imgur = function(options) {
         if (!this || !(this instanceof Imgur)) {
             return new Imgur(options);
         }
@@ -25,19 +25,19 @@
 
         this.clientid = options.clientid;
         this.endpoint = 'https://api.imgur.com/3/image';
-        this.callback = options.callback || undefined;
+        this.callback = options.callback;
         this.dropzone = document.querySelectorAll('.dropzone');
         this.info = document.querySelectorAll('.info');
-        //Start
+
         this.run();
     };
 
     Imgur.prototype = {
-        createEls: function (name, props, text) {
-            let el = document.createElement(name), p;
-            for (p in props) {
-                if (props.hasOwnProperty(p)) {
-                    el[p] = props[p];
+        createEls: function(name, props, text) {
+            let el = document.createElement(name);
+            for (let prop in props) {
+                if (props.hasOwnProperty(prop)) {
+                    el[prop] = props[prop];
                 }
             }
             if (text) {
@@ -45,66 +45,54 @@
             }
             return el;
         },
-        insertAfter: function (referenceNode, newNode) {
+        insertAfter: function(referenceNode, newNode) {
             referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
         },
-        post: function (path, data, callback) {
-            let xhttp = new XMLHttpRequest();
-
-            xhttp.open('POST', path, true);
-            xhttp.setRequestHeader('Authorization', 'Client-ID ' + this.clientid);
-            xhttp.onreadystatechange = function () {
-                if (this.readyState === 4) {
-                    if (this.status >= 200 && this.status < 300) {
-                        let response = '';
-                        try {
-                            response = JSON.parse(this.responseText);
-                        } catch (err) {
-                            response = this.responseText;
-                        }
-                        callback.call(window, response);
-                    } else {
-                        throw new Error(this.status + " - " + this.statusText);
-                    }
-                }
-            };
-            xhttp.send(data);
-            xhttp = null;
+        post: async function(path, data) {
+            const response = await fetch(path, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Client-ID ' + this.clientid
+                },
+                body: data
+            });
+        
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(`HTTP error, status = ${response.status}`);
+            }
         },
-        createDragZone: function () {
-            let p1, p2, input;
+        createDragZone: function() {
+            let p1 = this.createEls('p', {}, 'Drop Image File Here');
+            let p2 = this.createEls('p', {}, 'Or click here to select image');
+            let input = this.createEls('input', {type: 'file', multiple: 'multiple', className: 'input', accept: 'image/*'});
 
-                p1 = this.createEls('p', {}, 'Drop Image File Here');
-                p2 = this.createEls('p', {}, 'Or click here to select image');
-            input = this.createEls('input', {type: 'file', multiple: 'multiple', className: 'input', accept: 'image/*'});
-
-            Array.prototype.forEach.call(this.info, function (zone) {
+            Array.from(this.info).forEach(zone => {
                 zone.appendChild(p1);
                 zone.appendChild(p2);
-            }.bind(this));
-            Array.prototype.forEach.call(this.dropzone, function (zone) {
+            });
+
+            Array.from(this.dropzone).forEach(zone => {
                 zone.appendChild(input);
                 this.status(zone);
                 this.upload(zone);
-            }.bind(this));
+            });
         },
-        loading: function () {
-            let div, table, img;
-
-            div = this.createEls('div', {className: 'loading-modal'});
-            table = this.createEls('table', {className: 'loading-table'});
-            img = this.createEls('img', {className: 'loading-image', src: './css/loading-spin.svg'});
+        loading: function() {
+            let div = this.createEls('div', {className: 'loading-modal'});
+            let table = this.createEls('table', {className: 'loading-table'});
+            let img = this.createEls('img', {className: 'loading-image', src: './css/loading-spin.svg'});
 
             div.appendChild(table);
             table.appendChild(img);
             document.body.appendChild(div);
         },
-        status: function (el) {
+        status: function(el) {
             let div = this.createEls('div', {className: 'status'});
-
             this.insertAfter(el, div);
         },
-        matchFiles: function (file, zone, fileCount) {
+        matchFiles: function(file, zone, fileCount) {
             let status = zone.nextSibling;
 
             if (file.type.match(/image/) && file.type !== 'image/svg+xml') {
@@ -115,46 +103,48 @@
                 let fd = new FormData();
                 fd.append('image', file);
 
-                this.post(this.endpoint, fd, function (data) {
+                this.post(this.endpoint, fd).then(data => {
                     if (fileCount[0]+1 == fileCount[1]) {
                         document.body.classList.remove('loading');
                     }
-                    typeof this.callback === 'function' && this.callback.call(this, data);
-                }.bind(this));
+                    if (typeof this.callback === 'function') this.callback.call(this, data);
+                }).catch(error => {
+                    status.classList.remove('bg-success');
+                    status.classList.add('bg-danger');
+                    status.innerHTML = 'Invalid archive';
+                    throw new Error(error);
+                });
             } else {
                 status.classList.remove('bg-success');
                 status.classList.add('bg-danger');
                 status.innerHTML = 'Invalid archive';
             }
         },
-        upload: function (zone) {
-            let events = ['dragenter', 'dragleave', 'dragover', 'drop'],
-                file, target, i, len;
-
-            zone.addEventListener('change', function (e) {
+        upload: function(zone) {
+            let addOrRemClass = (event, e, classListMethod) => {
                 if (e.target && e.target.nodeName === 'INPUT' && e.target.type === 'file') {
-                    target = e.target.files;
-
-                    for (i = 0, len = target.length; i < len; i += 1) {
-                        file = target[i];
-                        this.matchFiles(file, zone, [i, target.length]);
+                    if (event === 'dragleave' || event === 'drop') {
+                        e.target.parentNode.classList[classListMethod]('dropzone-dragging');
                     }
                 }
-            }.bind(this), false);
+            };
 
-            events.map(function (event) {
-                zone.addEventListener(event, function (e) {
-                    if (e.target && e.target.nodeName === 'INPUT' && e.target.type === 'file') {
-                        if (event === 'dragleave' || event === 'drop') {
-                            e.target.parentNode.classList.remove('dropzone-dragging');
-                        } else {
-                            e.target.parentNode.classList.add('dropzone-dragging');
-                        }
+            zone.addEventListener('change', e => {
+                if (e.target && e.target.nodeName === 'INPUT' && e.target.type === 'file') {
+                    let target = e.target.files;
+
+                    for (let i = 0; i < target.length; i++) {
+                        this.matchFiles(target[i], zone, [i, target.length]);
                     }
-                }, false);
+                }
+            });
+
+            ['dragenter', 'dragleave', 'dragover', 'drop'].forEach(event => {
+                zone.addEventListener(event, e => addOrRemClass(event, e, 'add'), false);
+                zone.addEventListener(event, e => addOrRemClass(event, e, 'remove'), false);
             });
         },
-        run: function () {
+        run: function() {
             let loadingModal = document.querySelector('.loading-modal');
 
             if (!loadingModal) {

@@ -14,13 +14,13 @@ function addImg(ele, content) {
 }
 
 let feedback = function(res) {
-    reportInfo(res, true);
+    reportInfo(res);
     if (res.success === true) {
         let get_link = res.data.link.replace(/^http:\/\//i, 'https://');
         document.querySelector('.status').classList.add('bg-success');
         let content =
             'Image : ' + '<br><input class="image-url" value=\"' + get_link + '\"/>' 
-             + '<img class="img" alt="Imgur-Upload" src=\"' + get_link + '\"/>';
+            + '<img class="img" alt="Imgur-Upload" src=\"' + get_link + '\"/>';
         addImg('.status', content);
     }
 };
