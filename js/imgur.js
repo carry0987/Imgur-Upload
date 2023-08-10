@@ -64,7 +64,7 @@
             }
         },
         createDragZone: function() {
-            let p1 = this.createEls('p', {}, 'Drop Image File Here');
+            let p1 = this.createEls('p', {}, 'Drop or Paste Image File Here');
             let p2 = this.createEls('p', {}, 'Or click here to select image');
             let input = this.createEls('input', {type: 'file', multiple: 'multiple', className: 'input', accept: 'image/*'});
 
@@ -77,6 +77,18 @@
                 zone.appendChild(input);
                 this.status(zone);
                 this.upload(zone);
+            });
+
+            window.addEventListener('paste', (e) => {
+                let zone = this.dropzone[0];
+                let items = (e.clipboardData || e.originalEvent.clipboardData).items;
+                for (let i = 0; i < items.length; i++) {
+                    let item = items[i];
+                    if (item.kind === 'file' && item.type.startsWith('image')) {
+                        let blob = item.getAsFile();
+                        this.matchFiles(blob, zone, [i, items.length]);
+                    }
+                }
             });
         },
         loading: function() {

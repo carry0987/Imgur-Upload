@@ -4,8 +4,8 @@ function reportInfo(vars, showType = false) {
 }
 
 function addImg(ele, content) {
-    var myDIV = document.querySelector(ele);
-    var newContent = document.createElement('div');
+    let myDIV = document.querySelector(ele);
+    let newContent = document.createElement('div');
     newContent.innerHTML = content;
 
     while (newContent.firstChild) {
