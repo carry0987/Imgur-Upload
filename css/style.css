@@ -28,10 +28,9 @@ body.loading .loading-modal {
     margin-right: auto;
     margin-left: auto;
     max-width: 50%;
-}
-
-.info {
-    margin-top: 11%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .dropzone p {
