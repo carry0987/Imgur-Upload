@@ -51,18 +51,6 @@ body.loading .loading-modal {
     width: 100%
 }
 
-.status {
-    border-radius: 5px;
-    text-align: center;
-    width: 50%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.image-url {
-    width: 50%;
-}
-
 .dropzone.dropzone-dragging {
     border-color: #000
 }
@@ -83,8 +71,4 @@ body.loading .loading-modal {
     margin-right: auto;
     margin-top: 15%;
     margin-bottom: 15%;
-}
-
-.img {
-    width: 100%;
 }

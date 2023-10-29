@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Imgur-Upload</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="./css/style.css" rel="stylesheet" media="screen">
     <link href="./css/mobile-style.css" rel="stylesheet" media="screen">
     <link rel="shortcut icon" href="./favicon.png">
@@ -20,8 +22,52 @@
     <div class="dropzone">
         <div class="info"></div>
     </div>
-    <script type="text/javascript" src="./js/imgur.js"></script>
-    <script type="text/javascript" src="./js/upload.js"></script>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6">
+                <div class="d-flex justify-content-around align-items-center flex-column p-3 rounded" id="item-list"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="./dist/imgur.min.js"></script>
+    <script type="text/javascript">
+    const addImg = (selector, content) => {
+        const myDIV = document.querySelector(selector);
+        if (myDIV) {
+            const newContent = document.createElement('div');
+            newContent.innerHTML = content;
+            while (newContent.firstChild) {
+                myDIV.appendChild(newContent.firstChild);
+            }
+        } else {
+            console.error(`Element with selector "${selector}" not found.`);
+        }
+    }
+
+    const feedback = (res) => {
+        console.log(res);
+        if (res.success) {
+            const get_link = res.data.link.replace(/^http:\/\//i, 'https://');
+            const statusElement = document.querySelector('.status');
+            if (statusElement) {
+                statusElement.classList.add('success');
+                const content = `
+                    <div class="item">
+                        <h5 class="text-center">Image:</h5>
+                        <input type="text" class="form-control mb-3 image-url" value="${get_link}">
+                        <img class="img-fluid" alt="Imgur-Upload" src="${get_link}">
+                    </div>
+                `;
+                addImg('#item-list', content);
+            }
+        }
+    };
+
+    new Imgur({
+        clientid: 'b234bda60e00570', //You can change this ClientID
+        callback: feedback
+    });
+    </script>
 </body>
 
 </html>
