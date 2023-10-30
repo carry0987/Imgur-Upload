@@ -1,6 +1,6 @@
 {
   "name": "@carry0987/imgur",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library for upload images to imgur, no dependencies",
   "type": "module",
   "main": "dist/imgur.min.js",

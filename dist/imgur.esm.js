@@ -1,18 +1,34 @@
 class Imgur {
+    static version = '1.0.1';
     clientid;
     endpoint;
-    callback;
     dropzone;
     info;
+    onLoading;
+    onSuccess;
+    onSuccessAll;
+    onError;
     constructor(options) {
         if (!options || !options.clientid) {
             throw 'Provide a valid Client Id here: https://api.imgur.com/';
         }
         this.clientid = options.clientid;
         this.endpoint = 'https://api.imgur.com/3/image';
-        this.callback = options.callback;
         this.dropzone = document.querySelectorAll('.dropzone');
         this.info = document.querySelectorAll('.info');
+        this.onLoading = options.onLoading || (() => {
+            document.body.classList.add('loading');
+        });
+        this.onSuccess = options.onSuccess || ((data) => {
+            document.body.classList.remove('loading');
+        });
+        this.onSuccessAll = options.onSuccessAll || ((data) => {
+            document.body.classList.remove('loading');
+        });
+        this.onError = options.onError || ((errorMsg) => {
+            document.body.classList.remove('loading');
+            console.error('Invalid archive', errorMsg);
+        });
         this.run();
     }
     createEls(name, props, text) {
@@ -26,9 +42,6 @@ class Imgur {
             el.appendChild(document.createTextNode(text));
         }
         return el;
-    }
-    insertAfter(referenceNode, newNode) {
-        referenceNode.parentNode?.insertBefore(newNode, referenceNode.nextSibling);
     }
     async post(path, data) {
         const response = await fetch(path, {
@@ -55,7 +68,6 @@ class Imgur {
         });
         Array.from(this.dropzone).forEach(zone => {
             zone.appendChild(input);
-            this.status(zone);
             this.upload(zone);
         });
         window.addEventListener('paste', (e) => {
@@ -78,35 +90,23 @@ class Imgur {
         table.appendChild(img);
         document.body.appendChild(div);
     }
-    status(el) {
-        const div = this.createEls('div', { className: 'status' });
-        this.insertAfter(el, div);
-    }
     matchFiles(file, zone, fileCount) {
-        const status = zone.nextSibling;
         if (file.type.match(/image/) && file.type !== 'image/svg+xml') {
-            document.body.classList.add('loading');
-            status.classList.remove('bg-success', 'bg-danger');
-            status.innerHTML = '';
+            this.onLoading();
             const fd = new FormData();
             fd.append('image', file);
             this.post(this.endpoint, fd).then(data => {
                 if (fileCount[0] + 1 === fileCount[1]) {
-                    document.body.classList.remove('loading');
+                    this.onSuccessAll(data);
                 }
-                if (typeof this.callback === 'function')
-                    this.callback.call(this, data);
+                this.onSuccess(data);
             }).catch(error => {
-                status.classList.remove('bg-success');
-                status.classList.add('bg-danger');
-                status.innerHTML = 'Invalid archive';
+                this.onError(error);
                 throw new Error(error);
             });
         }
         else {
-            status.classList.remove('bg-success');
-            status.classList.add('bg-danger');
-            status.innerHTML = 'Invalid archive';
+            this.onError(new Error('Invalid archive'));
         }
     }
     upload(zone) {

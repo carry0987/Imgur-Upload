@@ -1,23 +1,29 @@
 interface ImgurOptions {
     clientid: string;
     callback?: (data: any) => void;
+    onLoading?: () => void;
+    onSuccess?: (data: any) => void;
+    onSuccessAll?: (data: any) => void;
+    onError?: (error: any) => void;
 }
 declare class Imgur {
+    static readonly version = "__version__";
     clientid: string;
     endpoint: string;
-    callback?: (data: any) => void;
     dropzone: NodeListOf<Element>;
     info: NodeListOf<Element>;
+    onLoading: () => void;
+    onSuccess: (data: any) => void;
+    onSuccessAll: (data: any) => void;
+    onError: (errorMsg: any) => void;
     constructor(options: ImgurOptions);
     private createEls;
-    private insertAfter;
     private post;
     private createDragZone;
     private loading;
-    private status;
     private matchFiles;
     private upload;
-    run(): void;
+    private run;
 }
 
 export { Imgur as default };

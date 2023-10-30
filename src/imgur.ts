@@ -2,14 +2,24 @@
 interface ImgurOptions {
     clientid: string;
     callback?: (data: any) => void;
+    onLoading?: () => void;
+    onSuccess?: (data: any) => void;
+    onSuccessAll?: (data: any) => void;
+    onError?: (error: any) => void;
 }
 
 class Imgur {
+    static readonly version = '__version__';
+
     clientid: string;
     endpoint: string;
-    callback?: (data: any) => void;
     dropzone: NodeListOf<Element>;
     info: NodeListOf<Element>;
+
+    onLoading: () => void;
+    onSuccess: (data: any) => void;
+    onSuccessAll: (data: any) => void;
+    onError: (errorMsg: any) => void;
 
     constructor(options: ImgurOptions) {
         if (!options || !options.clientid) {
@@ -18,9 +28,25 @@ class Imgur {
 
         this.clientid = options.clientid;
         this.endpoint = 'https://api.imgur.com/3/image';
-        this.callback = options.callback;
         this.dropzone = document.querySelectorAll('.dropzone');
         this.info = document.querySelectorAll('.info');
+
+        this.onLoading = options.onLoading || (() => {
+            document.body.classList.add('loading');
+        });
+
+        this.onSuccess = options.onSuccess || ((data: any) => {
+            document.body.classList.remove('loading');
+        });
+
+        this.onSuccessAll = options.onSuccessAll || ((data: any) => {
+            document.body.classList.remove('loading');
+        });
+
+        this.onError = options.onError || ((errorMsg: any) => {
+            document.body.classList.remove('loading');
+            console.error('Invalid archive', errorMsg);
+        });
 
         this.run();
     }
@@ -36,10 +62,6 @@ class Imgur {
             el.appendChild(document.createTextNode(text));
         }
         return el;
-    }
-
-    private insertAfter(referenceNode: Node, newNode: Node): void {
-        referenceNode.parentNode?.insertBefore(newNode, referenceNode.nextSibling);
     }
 
     private async post(path: string, data: FormData): Promise<any> {
@@ -69,7 +91,6 @@ class Imgur {
 
         Array.from(this.dropzone).forEach(zone => {
             zone.appendChild(input);
-            this.status(zone);
             this.upload(zone);
         });
 
@@ -96,37 +117,24 @@ class Imgur {
         document.body.appendChild(div);
     }
 
-    private status(el: Element) {
-        const div = this.createEls('div', {className: 'status'});
-        this.insertAfter(el, div);
-    }
-
     private matchFiles(file: Blob, zone: Element, fileCount: [number, number]) {
-        const status = zone.nextSibling as HTMLElement;
-
         if (file.type.match(/image/) && file.type !== 'image/svg+xml') {
-            document.body.classList.add('loading');
-            status.classList.remove('bg-success', 'bg-danger');
-            status.innerHTML = '';
+            this.onLoading();
 
             const fd = new FormData();
             fd.append('image', file);
 
             this.post(this.endpoint, fd).then(data => {
                 if (fileCount[0] + 1 === fileCount[1]) {
-                    document.body.classList.remove('loading');
+                    this.onSuccessAll(data);
                 }
-                if (typeof this.callback === 'function') this.callback.call(this, data);
+                this.onSuccess(data);
             }).catch(error => {
-                status.classList.remove('bg-success');
-                status.classList.add('bg-danger');
-                status.innerHTML = 'Invalid archive';
+                this.onError(error);
                 throw new Error(error);
             });
         } else {
-            status.classList.remove('bg-success');
-            status.classList.add('bg-danger');
-            status.innerHTML = 'Invalid archive';
+            this.onError(new Error('Invalid archive'));
         }
     }
 
@@ -157,7 +165,7 @@ class Imgur {
         });
     }
 
-    run(): void {
+    private run(): void {
         const loadingModal = document.querySelector('.loading-modal');
         if (!loadingModal) {
             this.loading();

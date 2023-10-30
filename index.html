@@ -23,11 +23,7 @@
         <div class="info"></div>
     </div>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6">
-                <div class="d-flex justify-content-around align-items-center flex-column p-3 rounded" id="item-list"></div>
-            </div>
-        </div>
+        <div class="col-12 col-md-6 d-flex flex-wrap justify-content-around w-100" id="item-list"></div>
     </div>
     <script type="text/javascript" src="./dist/imgur.min.js"></script>
     <script type="text/javascript">
@@ -48,13 +44,13 @@
         console.log(res);
         if (res.success) {
             const get_link = res.data.link.replace(/^http:\/\//i, 'https://');
-            const statusElement = document.querySelector('.status');
+            const statusElement = document.querySelector('#item-list');
             if (statusElement) {
                 statusElement.classList.add('success');
                 const content = `
-                    <div class="item">
-                        <h5 class="text-center">Image:</h5>
-                        <input type="text" class="form-control mb-3 image-url" value="${get_link}">
+                    <div class="item p-3 w-25">
+                        <h5>Image:</h5>
+                        <input type="text" class="form-control mb-3" value="${get_link}">
                         <img class="img-fluid" alt="Imgur-Upload" src="${get_link}">
                     </div>
                 `;
@@ -65,7 +61,7 @@
 
     new Imgur({
         clientid: 'b234bda60e00570', //You can change this ClientID
-        callback: feedback
+        onSuccess: feedback
     });
     </script>
 </body>
