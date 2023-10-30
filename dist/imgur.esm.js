@@ -1,5 +1,5 @@
 class Imgur {
-    static version = '1.0.1';
+    static version = '1.0.2';
     clientid;
     endpoint;
     dropzone;
@@ -127,6 +127,8 @@ class Imgur {
                     this.matchFiles(target[i], zone, [i, target.length]);
                 }
             }
+            // Reset input
+            e.target.value = '';
         });
         ['dragenter', 'dragleave', 'dragover', 'drop'].forEach(event => {
             zone.addEventListener(event, e => addOrRemClass(event, e, 'add'), false);

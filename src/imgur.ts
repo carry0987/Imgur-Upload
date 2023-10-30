@@ -157,6 +157,8 @@ class Imgur {
                     this.matchFiles(target[i], zone, [i, target.length]);
                 }
             }
+            // Reset input
+            (e.target as HTMLInputElement).value = '';
         });
 
         ['dragenter', 'dragleave', 'dragover', 'drop'].forEach(event => {

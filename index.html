@@ -23,7 +23,11 @@
         <div class="info"></div>
     </div>
     <div class="container">
-        <div class="col-12 col-md-6 d-flex flex-wrap justify-content-around w-100" id="item-list"></div>
+        <div class="row">
+            <div class="col-12 col-md-12">
+                <div class="row" id="item-list"></div>
+            </div>
+        </div>
     </div>
     <script type="text/javascript" src="./dist/imgur.min.js"></script>
     <script type="text/javascript">
@@ -48,9 +52,9 @@
             if (statusElement) {
                 statusElement.classList.add('success');
                 const content = `
-                    <div class="item p-3 w-25">
+                    <div class="col-6 col-md-3 item p-3">
                         <h5>Image:</h5>
-                        <input type="text" class="form-control mb-3" value="${get_link}">
+                        <input type="text" class="form-control mb-3 image-url" value="${get_link}">
                         <img class="img-fluid" alt="Imgur-Upload" src="${get_link}">
                     </div>
                 `;
