@@ -6,6 +6,7 @@ interface ImgurOptions {
     onSuccessAll?: (data: any) => void;
     onError?: (error: any) => void;
 }
+
 declare class Imgur {
     static readonly version = "__version__";
     clientid: string;
@@ -26,4 +27,4 @@ declare class Imgur {
     private run;
 }
 
-export { Imgur as default };
+export { type ImgurOptions, Imgur as default };

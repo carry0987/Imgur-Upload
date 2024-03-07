@@ -1,6 +1,6 @@
 {
   "name": "@carry0987/imgur",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A library for upload images to imgur, no dependencies",
   "type": "module",
   "main": "dist/imgur.min.js",
@@ -29,12 +29,13 @@
   },
   "homepage": "https://github.com/carry0987/Imgur-Upload#readme",
   "devDependencies": {
-    "@rollup/plugin-replace": "^5.0.3",
+    "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^11.1.5",
-    "rollup": "^4.0.2",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "rollup": "^4.12.1",
+    "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-dts": "^6.1.0",
     "tslib": "^2.6.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.4.2"
   }
 }

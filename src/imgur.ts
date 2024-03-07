@@ -1,12 +1,5 @@
 /* Imgur Upload Script */
-interface ImgurOptions {
-    clientid: string;
-    callback?: (data: any) => void;
-    onLoading?: () => void;
-    onSuccess?: (data: any) => void;
-    onSuccessAll?: (data: any) => void;
-    onError?: (error: any) => void;
-}
+import { ImgurOptions } from './interface/interfaces';
 
 class Imgur {
     static readonly version = '__version__';
@@ -176,4 +169,5 @@ class Imgur {
     }
 }
 
-export default Imgur;
+export { Imgur as default };
+export * from './interface/interfaces';
