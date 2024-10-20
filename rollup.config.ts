@@ -1,15 +1,17 @@
+import { RollupOptions } from 'rollup';
 import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
 import replace from '@rollup/plugin-replace';
+import tsConfigPaths from 'rollup-plugin-tsconfig-paths';
 import { dts } from 'rollup-plugin-dts';
-import del from 'rollup-plugin-delete';
 import { createRequire } from 'module';
+
 const pkg = createRequire(import.meta.url)('./package.json');
-
 const isProduction = process.env.BUILD === 'production';
+const sourceFile = 'src/imgur.ts';
 
-const jsConfig = {
-    input: 'src/imgur.ts',
+const jsConfig: RollupOptions = {
+    input: sourceFile,
     output: [
         {
             file: pkg.main,
@@ -24,6 +26,7 @@ const jsConfig = {
     ],
     plugins: [
         typescript(),
+        tsConfigPaths(),
         replace({
             preventAssignment: true,
             __version__: pkg.version
@@ -31,15 +34,15 @@ const jsConfig = {
     ]
 };
 
-const dtsConfig = {
-    input: 'dist/imgur.d.ts',
+const dtsConfig: RollupOptions = {
+    input: sourceFile,
     output: {
         file: pkg.types,
         format: 'es'
     },
     plugins: [
-        dts(),
-        del({ hook: 'buildEnd', targets: ['!dist/index.js', 'dist/*.d.ts', 'dist/interface'] })
+        tsConfigPaths(),
+        dts()
     ]
 };
 

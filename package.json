@@ -1,18 +1,25 @@
 {
   "name": "@carry0987/imgur",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "A library for upload images to imgur, no dependencies",
   "type": "module",
   "main": "dist/imgur.min.js",
   "module": "dist/imgur.esm.js",
-  "types": "dist/imgur.d.ts",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "umd": "./dist/imgur.min.js",
+      "import": "./dist/imgur.esm.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "rollup --config rollup.config.js",
-    "build": "rollup --config rollup.config.js --environment BUILD:production"
+    "start": "rollup --config rollup.config.ts --configPlugin typescript",
+    "build": "rollup --config rollup.config.ts --configPlugin typescript --environment BUILD:production"
   },
   "files": [
-    "dist"
+    "dist/*"
   ],
   "repository": {
     "type": "git",
@@ -29,13 +36,14 @@
   },
   "homepage": "https://github.com/carry0987/Imgur-Upload#readme",
   "devDependencies": {
-    "@rollup/plugin-replace": "^5.0.5",
+    "@rollup/plugin-replace": "^6.0.1",
     "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^11.1.6",
-    "rollup": "^4.12.1",
-    "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-dts": "^6.1.0",
-    "tslib": "^2.6.2",
-    "typescript": "^5.4.2"
+    "@rollup/plugin-typescript": "^12.1.1",
+    "@types/node": "^22.7.7",
+    "rollup": "^4.24.0",
+    "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-tsconfig-paths": "^1.5.2",
+    "tslib": "^2.8.0",
+    "typescript": "^5.6.3"
   }
 }

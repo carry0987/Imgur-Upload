@@ -1,5 +1,5 @@
 class Imgur {
-    static version = '1.0.3';
+    static version = '1.1.0';
     clientid;
     endpoint;
     dropzone;

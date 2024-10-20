@@ -1,5 +1,5 @@
 /* Imgur Upload Script */
-import { ImgurOptions } from './interface/interfaces';
+import { ImgurOptions } from '@/interface/interfaces';
 
 class Imgur {
     static readonly version = '__version__';
