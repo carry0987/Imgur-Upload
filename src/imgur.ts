@@ -58,12 +58,14 @@ class Imgur {
     }
 
     private async post(path: string, data: FormData): Promise<any> {
+        const myHeaders = new Headers();
+        myHeaders.append('Authorization', `Client-ID ${this.clientid}`);
+
         const response = await fetch(path, {
             method: 'POST',
-            headers: {
-                'Authorization': 'Client-ID ' + this.clientid
-            },
-            body: data
+            headers: myHeaders,
+            body: data,
+            redirect: 'follow'
         });
         if (response.ok) {
             return response.json();
@@ -116,6 +118,7 @@ class Imgur {
 
             const fd = new FormData();
             fd.append('image', file);
+            fd.append('type', 'file');
 
             this.post(this.endpoint, fd).then(data => {
                 if (fileCount[0] + 1 === fileCount[1]) {

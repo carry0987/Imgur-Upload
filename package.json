@@ -36,14 +36,14 @@
   },
   "homepage": "https://github.com/carry0987/Imgur-Upload#readme",
   "devDependencies": {
-    "@rollup/plugin-replace": "^6.0.1",
+    "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.1.1",
-    "@types/node": "^22.7.7",
-    "rollup": "^4.24.0",
-    "rollup-plugin-dts": "^6.1.1",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@types/node": "^24.3.0",
+    "rollup": "^4.50.0",
+    "rollup-plugin-dts": "^6.2.3",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
-    "tslib": "^2.8.0",
-    "typescript": "^5.6.3"
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.2"
   }
 }
