@@ -1,5 +1,5 @@
 class Imgur {
-    static version = '1.1.0';
+    static version = '1.2.0';
     clientid;
     endpoint;
     dropzone;
@@ -44,12 +44,13 @@ class Imgur {
         return el;
     }
     async post(path, data) {
+        const myHeaders = new Headers();
+        myHeaders.append('Authorization', `Client-ID ${this.clientid}`);
         const response = await fetch(path, {
             method: 'POST',
-            headers: {
-                'Authorization': 'Client-ID ' + this.clientid
-            },
-            body: data
+            headers: myHeaders,
+            body: data,
+            redirect: 'follow'
         });
         if (response.ok) {
             return response.json();
@@ -95,6 +96,7 @@ class Imgur {
             this.onLoading();
             const fd = new FormData();
             fd.append('image', file);
+            fd.append('type', 'file');
             this.post(this.endpoint, fd).then(data => {
                 if (fileCount[0] + 1 === fileCount[1]) {
                     this.onSuccessAll(data);

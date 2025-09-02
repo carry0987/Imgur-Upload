@@ -27,4 +27,5 @@ declare class Imgur {
     private run;
 }
 
-export { type ImgurOptions, Imgur as default };
+export { Imgur as default };
+export type { ImgurOptions };
